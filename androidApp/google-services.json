@@ -1,0 +1,54 @@
+{
+  "project_info": {
+    "project_number": "404656520995",
+    "project_id": "amirtham-999dc",
+    "storage_bucket": "amirtham-999dc.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:404656520995:android:7cb5aa87424df41f2c9696",
+        "android_client_info": {
+          "package_name": "com.palmah.cafe.amirtham"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "404656520995-lkdt3h474j10b98nso110adujpeioa4t.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.palmah.cafe.amirtham",
+            "certificate_hash": "f79a92b034e9e3fea02276f3a1a0e543cf9588ca"
+          }
+        },
+        {
+          "client_id": "404656520995-5vl0gnj3ua9qp9sbcun5t209l2esq13b.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyALxgYi92TYwQgL4KzPwMJ3f1alLwK7RlM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "404656520995-5vl0gnj3ua9qp9sbcun5t209l2esq13b.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "404656520995-trgh24oo0rhkg74sh2og3utndaoe4342.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.palmah.cafe.amirtham"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,0 +1,84 @@
+<resources>
+    <!-- Home -->
+    <string name="app_name">PlateCast</string>
+    <string name="menu_tab_label">Menu</string>
+    <string name="ai_studio_tab_label">Digital Signage Studio</string>
+    <string name="open_menu">Open menu</string>
+    <string name="profile">Profile</string>
+    <string name="digital_signage">Digital Signage</string>
+    <string name="sign_out">Sign out</string>
+    <string name="ai_studio_placeholder_description">Placeholder for the AI Studio destination.</string>
+    <string name="outlet_prefix">Outlet: %1$s</string>
+    <string name="powered_by">Powered by %1$s</string>
+
+    <!-- Auth: shared -->
+    <string name="email_label">Email</string>
+    <string name="password_label">Password</string>
+
+    <!-- Auth: create account -->
+    <string name="create_account">Create account</string>
+    <string name="brand_label">Brand</string>
+    <string name="outlet_label">Outlet</string>
+    <string name="display_name_label">Display name</string>
+    <string name="role_label">Role: %1$s</string>
+    <string name="already_have_account">Already have an account? Sign in</string>
+
+    <!-- Auth: sign in -->
+    <string name="sign_in">Sign in</string>
+    <string name="no_account_yet">No account yet? Create one</string>
+    <string name="sign_in_with_google">Sign in with Google</string>
+    <string name="app_tagline">Smart Menus &amp; TV Displays</string>
+    <string name="welcome_back">Welcome Back</string>
+    <string name="sign_in_subtitle">Sign in to your account to manage your menus and TV displays.</string>
+    <string name="username_label">Username</string>
+    <string name="continue_label">Continue</string>
+    <string name="show_password">Show password</string>
+    <string name="hide_password">Hide password</string>
+    <string name="or_divider">or</string>
+
+    <!-- Digital signage: generate/upload -->
+    <string name="upload">Upload</string>
+    <string name="selected_image">Selected image</string>
+    <string name="something_went_wrong">Something went wrong</string>
+    <string name="generated_digital_signage">Generated digital signage</string>
+    <string name="board_name_label">Board Name</string>
+    <string name="board_name_placeholder">e.g., Main Cafe Board</string>
+    <string name="chef_special">Chef\'s Special</string>
+    <string name="deal_of_the_day">Deal of the Day</string>
+    <string name="signature_dishes">Signature Dishes</string>
+    <string name="upload_dishes_label">Upload / take photos of dishes (up to %1$d)</string>
+    <string name="dish_name_placeholder">Dish Name</string>
+    <string name="price_placeholder">Price</string>
+    <string name="extra_information_placeholder">Extra Information</string>
+    <string name="generate_ai_image">Generate AI Image</string>
+
+    <!-- Digital signage: display -->
+    <string name="no_digital_signage_images">No digital signage images yet</string>
+    <string name="digital_signage_image_description">Digital signage</string>
+    <string name="failed_to_load_image">Failed to load image:\n%1$s</string>
+    <string name="close">Close</string>
+
+    <!-- Digital signage: board list -->
+    <string name="back">Back</string>
+    <string name="new_board">New board</string>
+    <string name="play_slideshow">Play slideshow</string>
+    <string name="delete_board">Delete board</string>
+    <string name="untitled_board">Untitled board</string>
+    <string name="unknown_date">Unknown date</string>
+    <string name="created_on">Created %1$s</string>
+    <string name="no_digital_signage_boards">No digital signage boards yet</string>
+    <string name="no_digital_signage_boards_subtitle">Tap the \'+\' button to create your first board.</string>
+    <string name="delete_board_confirm_title">Delete board?</string>
+    <string name="delete_board_confirm_message">This will permanently remove this digital signage board.</string>
+    <string name="cancel">Cancel</string>
+    <string name="delete">Delete</string>
+
+    <!-- Menu -->
+    <string name="add_menu">Add menu</string>
+    <string name="scan">Scan</string>
+    <string name="scan_menu_card_title">Scan your menu card to get started</string>
+    <string name="scan_menu_card_subtitle">Tap the \'+\' button in the corner to begin digitization.</string>
+    <string name="search_dishes_placeholder">Search dishes...</string>
+    <string name="clear_search">Clear search</string>
+    <string name="all_categories">All</string>
+</resources>
