@@ -34,13 +34,13 @@ val appModule = module {
 
     single<MenuRepository> { FirebaseMenuRepository() }
 
-    factory { MenuUseCase(get<MenuRepository>(), get<UserRepository>()) }
-
-    viewModel { MenuViewModel(get()) }
-
     single<DigitalSignageRepository> { DigitalSignageRepositoryImpl() }
 
+    factory { MenuUseCase(get<MenuRepository>(), get<UserRepository>(), get<DigitalSignageRepository>()) }
+
     factory { DigitalSignageUseCase(get<DigitalSignageRepository>(), get<UserRepository>()) }
+
+    viewModel { MenuViewModel(get(), get<DigitalSignageUseCase>(), get<UserRepository>()) }
 
     viewModel { DigitalSignageViewModel(get(), get<UserRepository>()) }
 

@@ -81,4 +81,8 @@
     <string name="search_dishes_placeholder">Search dishes...</string>
     <string name="clear_search">Clear search</string>
     <string name="all_categories">All</string>
+    <string name="edit_dish">Edit dish</string>
+    <string name="timings_placeholder">Timings (e.g., 11am - 3pm)</string>
+    <string name="description_placeholder">Description</string>
+    <string name="save">Save</string>
 </resources>

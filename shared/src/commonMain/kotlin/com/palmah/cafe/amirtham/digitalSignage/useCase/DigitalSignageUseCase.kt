@@ -37,6 +37,16 @@ class DigitalSignageUseCase(
     private val repository: DigitalSignageRepository = DigitalSignageRepositoryImpl(),
     private val userRepository: UserRepository = FirebaseUserRepository(),
 ) {
+
+    suspend fun generateMenuDigitalSignageImage(images: List<DigitalSignageInfo>, menuJson: String): PlateCastAiResponse {
+        require(images.isNotEmpty()) {
+            "images should not be empty"
+        }
+        val promptText = buildMenuDigitalSignagePrompt(images, menuJson)
+        Logger.d(tag = "DigitalSignageUseCase", messageString = "Digital Signage Prompt: $promptText")
+        return repository.generateDigitalSignageImage(promptText, images)
+    }
+
     suspend fun generateDigitalSignageImage(images: List<DigitalSignageInfo>, boardName : String): PlateCastAiResponse {
         require(images.isNotEmpty() && images.size <= MAX_SIGNAGE_IMAGES) {
             "generateDigitalSignageImage requires 1 to $MAX_SIGNAGE_IMAGES images, got ${images.size}"
@@ -160,6 +170,57 @@ class DigitalSignageUseCase(
             )
             appendLine("- DO NOT hallucinate extra dishes beyond the specified $dishCount.")
             append("- DO NOT produce scrambled glyphs, misspellings, or unreadable currency symbols.")
+        }
+    }
+
+    private fun buildMenuDigitalSignagePrompt(images: List<DigitalSignageInfo>, menuJson: String): String {
+        return buildString {
+            appendLine("Role: Professional Digital Signage Designer & Data Auditor.")
+            appendLine(
+                "Task: Convert the provided JSON menu data into clean, modern digital menu board " +
+                    "images (16:9 aspect ratio).",
+            )
+            appendLine("Phase 1: Data Verification (CRITICAL)")
+            appendLine("Before designing, perform an internal audit: Count the total number of items in the JSON.")
+            appendLine("Ensure that every single item from the JSON is included in your design plan.")
+            appendLine(
+                "If the volume of items is too high for one 16:9 screen, categorize them immediately " +
+                    "and plan your pagination. Do not omit any item.",
+            )
+            appendLine("Phase 2: Reference Image Input")
+            images.forEachIndexed { index, image ->
+                appendLine(
+                    "- The image immediately preceded by the tag " +
+                        "[Reference Image ${index + 1} of ${images.size}: \"${image.name}\"] is the " +
+                        "reference image for this design.",
+                )
+            }
+            appendLine(
+                "Instruction: Analyze the reference image(s) identified above. Extract their color " +
+                    "palette, typography style, and layout logic. Apply these to your design so the " +
+                    "output is a faithful digital adaptation of the reference.",
+            )
+            appendLine("Phase 3: Visual Style & Layout")
+            appendLine("Design Adaptation: Adopt the color scheme and font personality of the reference.")
+            appendLine(
+                "Tone: Maintain high legibility. Ensure the design feels like a premium, professional " +
+                    "digital menu.",
+            )
+            appendLine("Hierarchy: Item names (bold/prominent), descriptions (subtle), prices (right-aligned).")
+            appendLine("Operational Rules:")
+            appendLine(
+                "NO OMISSIONS: You are strictly forbidden from skipping items. If an item is in the " +
+                    "JSON, it must be on the menu.",
+            )
+            appendLine(
+                "PAGINATION: If the total item count exceeds the capacity of a single screen while " +
+                    "maintaining readability, split the content across sequential images (e.g., Image 1, " +
+                    "Image 2, etc.).",
+            )
+            appendLine("ACCURACY: Use ONLY the exact item names and prices provided in the JSON.")
+            appendLine("Formatting: Professional 16:9 widescreen output.")
+            appendLine("Menu Data (JSON):")
+            append(menuJson)
         }
     }
 

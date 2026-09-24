@@ -25,6 +25,10 @@ class DigitalSignageViewModel(
     private val _uiState = MutableStateFlow(DigitalSignageUiState())
     val uiState: StateFlow<DigitalSignageUiState> = _uiState
 
+    fun reset() {
+        _uiState.value = DigitalSignageUiState()
+    }
+
     fun onBoardNameChange(name: String) {
         if (name.length <= BOARD_NAME_MAX_LENGTH) {
             _uiState.update { it.copy(boardName = name) }
@@ -109,4 +113,6 @@ class DigitalSignageViewModel(
             logger.e(e) { "Failed to upload digital signage image" }
         }
     }
+
+
 }

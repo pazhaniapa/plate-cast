@@ -7,4 +7,6 @@ data class MenuUiState(
     val menuItems: List<MenuItem> = emptyList(),
     val searchQuery: String = "",
     val selectedCategory: String? = null,
+    val itemPendingEdit: MenuItem? = null,
+    val editForm: EditMenuItemFormState = EditMenuItemFormState(),
 )

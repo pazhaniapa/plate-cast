@@ -63,6 +63,7 @@ import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
 import com.palmah.cafe.amirtham.digitalSignage.model.DigitalSignageBoard
 import com.palmah.cafe.amirtham.digitalSignage.viewModel.DigitalSignageListViewModel
+import com.palmah.cafe.amirtham.digitalSignage.viewModel.DigitalSignageViewModel
 import com.palmah.cafe.amirtham.ui.theme.Terracotta
 import com.palmah.cafe.amirtham.ui.theme.TerracottaContainer
 import com.palmah.cafe.amirtham.utils.formatDate
@@ -131,14 +132,16 @@ fun DigitalSignageListScreen(
     }
 
     if (showCreateBoardSheet) {
+        val digitalSignageViewModel = koinViewModel<DigitalSignageViewModel>()
         ModalBottomSheet(
             onDismissRequest = {
                 showCreateBoardSheet = false
+                digitalSignageViewModel.reset()
                 viewModel.loadBoards()
             },
             sheetState = createBoardSheetState,
         ) {
-            DigitalSignageScreen()
+            DigitalSignageScreen(viewModel = digitalSignageViewModel)
         }
     }
 

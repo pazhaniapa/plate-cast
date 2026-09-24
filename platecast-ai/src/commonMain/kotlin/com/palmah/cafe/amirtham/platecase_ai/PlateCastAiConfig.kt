@@ -9,5 +9,5 @@ package com.palmah.cafe.amirtham.platecase_ai
  * environment variable) and supply it at app startup instead.
  */
 object PlateCastAiConfig {
-    const val GEMINI_API_KEY: String = "<Place your API key here>"
+    const val GEMINI_API_KEY: String = "<API KEY HERE>"
 }

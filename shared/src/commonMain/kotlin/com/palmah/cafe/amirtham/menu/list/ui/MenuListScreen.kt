@@ -4,14 +4,21 @@ import amirtham.shared.generated.resources.Res
 import amirtham.shared.generated.resources.add_menu
 import amirtham.shared.generated.resources.all_categories
 import amirtham.shared.generated.resources.clear_search
+import amirtham.shared.generated.resources.description_placeholder
+import amirtham.shared.generated.resources.dish_name_placeholder
+import amirtham.shared.generated.resources.edit_dish
 import amirtham.shared.generated.resources.menu_placeholder_item_2
+import amirtham.shared.generated.resources.price_placeholder
+import amirtham.shared.generated.resources.save
 import amirtham.shared.generated.resources.scan
 import amirtham.shared.generated.resources.scan_menu_card_subtitle
 import amirtham.shared.generated.resources.scan_menu_card_title
 import amirtham.shared.generated.resources.search_dishes_placeholder
+import amirtham.shared.generated.resources.timings_placeholder
 import amirtham.shared.generated.resources.upload
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -29,12 +36,16 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.List
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
@@ -47,9 +58,13 @@ import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.SmallFloatingActionButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -62,6 +77,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -88,6 +104,8 @@ fun MenuListScreen(viewModel: MenuViewModel = koinViewModel<MenuViewModel>()) {
         photo?.let { viewModel.onPhotoSelected(it) }
     }
 
+    val editItemSheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
+
     Box(modifier = Modifier.fillMaxSize()) {
         when {
             uiState.isLoading && uiState.menuItems.isEmpty() -> {
@@ -95,47 +113,81 @@ fun MenuListScreen(viewModel: MenuViewModel = koinViewModel<MenuViewModel>()) {
                     CircularProgressIndicator()
                 }
             }
+
             uiState.menuItems.isEmpty() -> EmptyMenuContent()
             else -> MenuItemsContent(
                 uiState = uiState,
                 onSearchQueryChange = viewModel::onSearchQueryChange,
                 onCategorySelected = viewModel::onCategorySelected,
+                onItemClick = viewModel::onMenuItemClick,
             )
         }
 
         var showScanOptions by remember { mutableStateOf(false) }
-        Box(modifier = Modifier.align(Alignment.BottomEnd).padding(24.dp)) {
-            FloatingActionButton(
-                onClick = { showScanOptions = true },
-                containerColor = MaterialTheme.colorScheme.primary,
-                contentColor = MaterialTheme.colorScheme.onPrimary,
+        Column(
+            modifier = Modifier.align(Alignment.BottomEnd).padding(24.dp),
+            horizontalAlignment = Alignment.End,
+            verticalArrangement = Arrangement.spacedBy(16.dp),
+        ) {
+            SmallFloatingActionButton(
+                onClick = { viewModel.generateDigitalSignageFromMenu() },
+                containerColor = MaterialTheme.colorScheme.secondary,
+                contentColor = MaterialTheme.colorScheme.onSecondary,
             ) {
-                Icon(Icons.Filled.Add, contentDescription = stringResource(Res.string.add_menu))
+                Icon(Icons.Filled.Info, contentDescription = "Generate digital signage from menu")
             }
-            DropdownMenu(
-                expanded = showScanOptions,
-                onDismissRequest = { showScanOptions = false },
-            ) {
-                if (isCameraCaptureSupported) {
+            Box {
+                FloatingActionButton(
+                    onClick = { showScanOptions = true },
+                    containerColor = MaterialTheme.colorScheme.primary,
+                    contentColor = MaterialTheme.colorScheme.onPrimary,
+                ) {
+                    Icon(Icons.Filled.Add, contentDescription = stringResource(Res.string.add_menu))
+                }
+                DropdownMenu(
+                    expanded = showScanOptions,
+                    onDismissRequest = { showScanOptions = false },
+                ) {
+                    if (isCameraCaptureSupported) {
+                        DropdownMenuItem(
+                            text = { Text(stringResource(Res.string.scan)) },
+                            onClick = {
+                                showScanOptions = false
+                                picker.launchCamera()
+                            },
+                        )
+                    }
                     DropdownMenuItem(
-                        text = { Text(stringResource(Res.string.scan)) },
+                        text = { Text(stringResource(Res.string.upload)) },
                         onClick = {
                             showScanOptions = false
-                            picker.launchCamera()
+                            picker.launchGallery()
                         },
                     )
                 }
-                DropdownMenuItem(
-                    text = { Text(stringResource(Res.string.upload)) },
-                    onClick = {
-                        showScanOptions = false
-                        picker.launchGallery()
-                    },
-                )
+            }
+
+            if (uiState.itemPendingEdit != null) {
+                ModalBottomSheet(
+                    onDismissRequest = viewModel::dismissEditMenuItem,
+                    sheetState = editItemSheetState,
+                ) {
+                    EditMenuItemContent(
+                        form = uiState.editForm,
+                        onNameChange = viewModel::onEditNameChange,
+                        onPriceChange = viewModel::onEditPriceChange,
+                        onTimingsChange = viewModel::onEditTimingsChange,
+                        onDescriptionChange = viewModel::onEditDescriptionChange,
+                        onSave = viewModel::saveMenuItemEdits,
+                    )
+                }
             }
         }
+
+
     }
 }
+
 
 @Composable
 private fun EmptyMenuContent() {
@@ -179,6 +231,7 @@ private fun MenuItemsContent(
     uiState: MenuUiState,
     onSearchQueryChange: (String) -> Unit,
     onCategorySelected: (String?) -> Unit,
+    onItemClick: (MenuItem) -> Unit,
 ) {
     val categories = remember(uiState.menuItems) {
         uiState.menuItems.map { it.categoryName }.filter { it.isNotBlank() }.distinct()
@@ -187,7 +240,7 @@ private fun MenuItemsContent(
         uiState.menuItems.filter { item ->
             val matchesCategory = uiState.selectedCategory == null || item.categoryName == uiState.selectedCategory
             val matchesQuery = uiState.searchQuery.isBlank() ||
-                item.name.contains(uiState.searchQuery, ignoreCase = true)
+                    item.name.contains(uiState.searchQuery, ignoreCase = true)
             matchesCategory && matchesQuery
         }
     }
@@ -260,17 +313,17 @@ private fun MenuItemsContent(
             contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp),
         ) {
-            items(filteredItems) { item ->
-                MenuItemCard(item)
+            items(filteredItems, key = { it.id.ifBlank { it.name } }) { item ->
+                MenuItemCard(item, onClick = { onItemClick(item) })
             }
         }
     }
 }
 
 @Composable
-private fun MenuItemCard(item: MenuItem) {
+private fun MenuItemCard(item: MenuItem, onClick: () -> Unit) {
     Card(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier.fillMaxWidth().clickable(onClick = onClick),
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
     ) {
         Row(
@@ -308,6 +361,70 @@ private fun MenuItemCard(item: MenuItem) {
                 style = MaterialTheme.typography.titleMedium,
                 color = Terracotta,
             )
+        }
+    }
+}
+
+@Composable
+private fun EditMenuItemContent(
+    form: EditMenuItemFormState,
+    onNameChange: (String) -> Unit,
+    onPriceChange: (String) -> Unit,
+    onTimingsChange: (String) -> Unit,
+    onDescriptionChange: (String) -> Unit,
+    onSave: () -> Unit,
+) {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 24.dp, vertical = 16.dp),
+    ) {
+        Text(stringResource(Res.string.edit_dish), style = MaterialTheme.typography.titleLarge)
+        Spacer(modifier = Modifier.height(16.dp))
+
+        OutlinedTextField(
+            value = form.name,
+            onValueChange = onNameChange,
+            placeholder = { Text(stringResource(Res.string.dish_name_placeholder)) },
+            singleLine = true,
+            modifier = Modifier.fillMaxWidth(),
+        )
+        Spacer(modifier = Modifier.height(8.dp))
+        OutlinedTextField(
+            value = form.price,
+            onValueChange = onPriceChange,
+            placeholder = { Text(stringResource(Res.string.price_placeholder)) },
+            singleLine = true,
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
+            modifier = Modifier.fillMaxWidth(),
+        )
+        Spacer(modifier = Modifier.height(8.dp))
+        OutlinedTextField(
+            value = form.timings,
+            onValueChange = onTimingsChange,
+            placeholder = { Text(stringResource(Res.string.timings_placeholder)) },
+            singleLine = true,
+            modifier = Modifier.fillMaxWidth(),
+        )
+        Spacer(modifier = Modifier.height(8.dp))
+        OutlinedTextField(
+            value = form.description,
+            onValueChange = onDescriptionChange,
+            placeholder = { Text(stringResource(Res.string.description_placeholder)) },
+            modifier = Modifier.fillMaxWidth(),
+        )
+
+        Spacer(modifier = Modifier.height(20.dp))
+        Button(
+            onClick = onSave,
+            shape = RoundedCornerShape(12.dp),
+            colors = ButtonDefaults.buttonColors(
+                containerColor = Terracotta,
+                contentColor = MaterialTheme.colorScheme.onPrimary,
+            ),
+            modifier = Modifier.fillMaxWidth().height(52.dp),
+        ) {
+            Text(stringResource(Res.string.save))
         }
     }
 }

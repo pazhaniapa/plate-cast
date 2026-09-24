@@ -84,6 +84,7 @@ kotlin {
             implementation(libs.firebase.analytics)
             implementation(libs.coil.compose)
             implementation(libs.coil.network.ktor3)
+            implementation(libs.ktor.client.core)
 
             implementation(project.dependencies.platform(libs.koin.bom))
             implementation(libs.koin.core)

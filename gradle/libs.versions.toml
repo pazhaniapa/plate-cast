@@ -77,6 +77,7 @@ androidx-runner = { group = "androidx.test", name = "runner", version.ref = "run
 androidx-core = { group = "androidx.test", name = "core", version.ref = "core" }
 koog-prompt-executor-google-client = { module = "ai.koog:prompt-executor-google-client", version.ref = "koogGoogleClient" }
 koog-http-client-ktor = { module = "ai.koog:http-client-ktor", version.ref = "koog" }
+ktor-client-core = { module = "io.ktor:ktor-client-core", version.ref = "ktor" }
 ktor-client-android = { module = "io.ktor:ktor-client-android", version.ref = "ktor" }
 ktor-client-darwin = { module = "io.ktor:ktor-client-darwin", version.ref = "ktor" }
 ktor-client-cio = { module = "io.ktor:ktor-client-cio", version.ref = "ktor" }
